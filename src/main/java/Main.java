@@ -1,4 +1,7 @@
 import DBTools.DBConnector;
+import JsonBuilders.LastNameSearch;
+import JsonBuilders.ProductNameMinTimesSearch;
+import JsonBuilders.SearchCriteria;
 import JsonBuilders.SearchCriteriaJsonBuilder;
 import org.json.JSONObject;
 
@@ -8,10 +11,12 @@ public class Main {
     public static void main(String[] args) {
         JSONObject lastNameCriteria = new JSONObject();
         lastNameCriteria.put("lastName", "Иванов");
+        SearchCriteria lastNameSearch = new LastNameSearch(lastNameCriteria);
 
         JSONObject productNameMinTimesCriteria = new JSONObject();
         productNameMinTimesCriteria.put("productName", "Капуста")
                 .put("minTimes", 4);
+        SearchCriteria productNameMinTimesSearch = new ProductNameMinTimesSearch(productNameMinTimesCriteria);
 
         DBConnector connection = new DBConnector();
         SearchCriteriaJsonBuilder searchCriteria = new SearchCriteriaJsonBuilder();
@@ -22,8 +27,8 @@ public class Main {
         try {
             Connection con = connection.getDBConnecion();
             try {
-                testResultJson = searchCriteria.buildLastNameCriteriaJSON(con, lastNameCriteria);
-                testResultJson2 = searchCriteria.buildProductNameMinTimesCriteriaJSON(con, productNameMinTimesCriteria);
+                testResultJson = lastNameSearch.getJson(con);
+                testResultJson2 = productNameMinTimesSearch.getJson(con);
 
             } finally {
                 con.close();

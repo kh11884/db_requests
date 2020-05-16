@@ -1,6 +1,6 @@
-package JsonBuilders;
+package SearchCriteria;
 
-import org.json.JSONArray;
+import JsonBuilders.SearchJsonBuilder;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -16,6 +16,7 @@ public class LastNameSearch implements SearchCriteria {
         this.lastNameCriteria = lastNameCriteria;
     }
 
+    @Override
     public JSONObject getJson(Connection connection) {
         JSONObject resultJsonObject = new JSONObject();
         try {
@@ -25,13 +26,7 @@ public class LastNameSearch implements SearchCriteria {
                     "WHERE lastname = '" + lastNameCriteriaString + "'");
 
             resultJsonObject.put("criteria", lastNameCriteria);
-            resultJsonObject.put("results", new JSONArray());
-
-            while (resultSet.next()) {
-                resultJsonObject.append("results", new JSONObject()
-                        .put("lastName", resultSet.getString(1))
-                        .put("firstName", resultSet.getString(2)));
-            }
+            resultJsonObject.put("results", SearchJsonBuilder.getResultsJsonArray(resultSet));
 
             resultSet.close();
             stmt.close();

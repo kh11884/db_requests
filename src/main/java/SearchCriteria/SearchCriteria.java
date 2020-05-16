@@ -1,9 +1,11 @@
-package JsonBuilders;
+package SearchCriteria;
 
 import org.json.JSONObject;
 
 import java.sql.Connection;
 
 public interface SearchCriteria {
-    public JSONObject getJson(Connection connection);
+
+
+    JSONObject getJson(Connection connection);
 }

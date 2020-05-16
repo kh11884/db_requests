@@ -1,5 +1,5 @@
 import DBTools.DBConnector;
-import JsonBuilders.*;
+import SearchCriteria.*;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -22,6 +22,9 @@ public class Main {
                 .put("maxExpenses", 1200);
         searchCriteriaArray.add(new RangeExpensesSearch(rangeExpensesCriteria));
 
+        JSONObject badCustomersCriteria = new JSONObject();
+        badCustomersCriteria.put("badCustomers", 3);
+        searchCriteriaArray.add(new BadCustomersSearch(badCustomersCriteria));
 
         DBConnector connection = new DBConnector();
 

@@ -1,4 +1,4 @@
-package FileWriters;
+package OutputFileWriters;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

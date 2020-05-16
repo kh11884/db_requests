@@ -1,0 +1,21 @@
+{
+  "criterias": [
+    {
+      "lastName": "Иванов"
+    },
+    {
+      "productName": "Капуста",
+      "minTimes": 5
+    },
+    {
+      "minExpenses": 1100,
+      "maxExpenses": 1200
+    },
+    {
+      "badCustomers": 3
+    },
+    {
+      "lastName": "Петров"
+    }
+  ]
+}

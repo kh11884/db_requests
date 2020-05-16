@@ -1,34 +1,36 @@
 import DBTools.DBConnector;
-import JsonBuilders.LastNameSearch;
-import JsonBuilders.ProductNameMinTimesSearch;
-import JsonBuilders.SearchCriteria;
-import JsonBuilders.SearchCriteriaJsonBuilder;
+import JsonBuilders.*;
 import org.json.JSONObject;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
+        ArrayList<SearchCriteria> searchCriteriaArray = new ArrayList<SearchCriteria>();
         JSONObject lastNameCriteria = new JSONObject();
         lastNameCriteria.put("lastName", "Иванов");
-        SearchCriteria lastNameSearch = new LastNameSearch(lastNameCriteria);
+        searchCriteriaArray.add(new LastNameSearch(lastNameCriteria));
 
         JSONObject productNameMinTimesCriteria = new JSONObject();
         productNameMinTimesCriteria.put("productName", "Капуста")
                 .put("minTimes", 4);
-        SearchCriteria productNameMinTimesSearch = new ProductNameMinTimesSearch(productNameMinTimesCriteria);
+        searchCriteriaArray.add(new ProductNameMinTimesSearch(productNameMinTimesCriteria));
+
+        JSONObject rangeExpensesCriteria = new JSONObject();
+        rangeExpensesCriteria.put("minExpenses", 1100)
+                .put("maxExpenses", 1200);
+        searchCriteriaArray.add(new RangeExpensesSearch(rangeExpensesCriteria));
+
 
         DBConnector connection = new DBConnector();
-        SearchCriteriaJsonBuilder searchCriteria = new SearchCriteriaJsonBuilder();
-
-        JSONObject testResultJson = null;
-        JSONObject testResultJson2 = null;
 
         try {
             Connection con = connection.getDBConnecion();
             try {
-                testResultJson = lastNameSearch.getJson(con);
-                testResultJson2 = productNameMinTimesSearch.getJson(con);
+                for (SearchCriteria searchCriteria : searchCriteriaArray) {
+                    System.out.println(searchCriteria.getJson(con));
+                }
 
             } finally {
                 con.close();
@@ -36,7 +38,6 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(testResultJson);
-        System.out.println(testResultJson2);
+
     }
 }

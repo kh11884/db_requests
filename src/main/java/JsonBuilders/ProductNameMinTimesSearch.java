@@ -11,6 +11,7 @@ import java.sql.Statement;
 public class ProductNameMinTimesSearch implements SearchCriteria {
     private final JSONObject productNameMinTimesCriteria;
 
+    //TODO: добавить проверку правильности JSON в конструктор.
     public ProductNameMinTimesSearch(JSONObject productNameMinTimesCriteria) {
         this.productNameMinTimesCriteria = productNameMinTimesCriteria;
     }

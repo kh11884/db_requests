@@ -1,5 +1,7 @@
 import DBTools.DBConnector;
+import FileWriters.SearchJsonFileWriter;
 import SearchCriteria.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -7,6 +9,8 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
+
+
         ArrayList<SearchCriteria> searchCriteriaArray = new ArrayList<SearchCriteria>();
         JSONObject lastNameCriteria = new JSONObject();
         lastNameCriteria.put("lastName", "Иванов");
@@ -26,21 +30,17 @@ public class Main {
         badCustomersCriteria.put("badCustomers", 3);
         searchCriteriaArray.add(new BadCustomersSearch(badCustomersCriteria));
 
+        JSONArray jsonArray = new JSONArray();
+
         DBConnector connection = new DBConnector();
 
-        try {
-            Connection con = connection.getDBConnecion();
-            try {
-                for (SearchCriteria searchCriteria : searchCriteriaArray) {
-                    System.out.println(searchCriteria.getJson(con));
-                }
-
-            } finally {
-                con.close();
+        try (Connection con = connection.getDBConnecion()) {
+            for (SearchCriteria searchCriteria : searchCriteriaArray) {
+                    jsonArray.put(searchCriteria.getJson(con));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        SearchJsonFileWriter.writeSearchJsonFile("output.json", jsonArray);
     }
 }

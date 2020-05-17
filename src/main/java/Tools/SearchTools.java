@@ -1,6 +1,7 @@
-import DBTools.DBConnector;
-import InputFileReaders.InputSearchFileReader;
-import OutputFileWriters.SearchJsonFileWriter;
+package Tools;
+
+import InputFileReaders.InputJsonFileReader;
+import OutputFileWriters.OutputJsonFileWriter;
 import SearchCriteria.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,8 +10,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 public class SearchTools {
-    public static void search (String inputFile, String outputFile){
-        JSONArray criterias = InputSearchFileReader.readInputSearchFile(inputFile);
+    public void search(String inputFile, String outputFile) {
+        JSONArray criterias = InputJsonFileReader.readInputSearchFile(inputFile);
+
         ArrayList<SearchCriteria> searchCriteriaArray = new ArrayList<SearchCriteria>();
         for (Object item : criterias) {
             JSONObject element = (JSONObject) item;
@@ -31,9 +33,7 @@ public class SearchTools {
         }
 
         JSONArray jsonArray = new JSONArray();
-
         DBConnector connection = new DBConnector();
-
         try (Connection con = connection.getDBConnecion()) {
             for (SearchCriteria searchCriteria : searchCriteriaArray) {
                 jsonArray.put(searchCriteria.getJson(con));
@@ -41,6 +41,11 @@ public class SearchTools {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        SearchJsonFileWriter.writeSearchJsonFile(outputFile, jsonArray);
+
+        JSONObject resultJson = new JSONObject()
+                .put("type", "search")
+                .put("results", jsonArray);
+
+        OutputJsonFileWriter.writeSearchJsonFile(outputFile, resultJson);
     }
 }

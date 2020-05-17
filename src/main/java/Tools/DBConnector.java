@@ -1,4 +1,4 @@
-package DBTools;
+package Tools;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

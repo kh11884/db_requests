@@ -1,11 +1,11 @@
 {
   "criterias": [
     {
-      "lastName": "РРІР°РЅРѕРІ"
+      "lastName": "Иван"
     },
     {
-      "productName": "РљР°РїСѓСЃС‚Р°",
-      "minTimes": 5
+      "productName": "Капуста",
+      "minTimes": 3
     },
     {
       "minExpenses": 1100,
@@ -13,9 +13,6 @@
     },
     {
       "badCustomers": 3
-    },
-    {
-      "lastName": "РџРµС‚СЂРѕРІ"
     }
   ]
 }

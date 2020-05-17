@@ -5,12 +5,14 @@ import OutputFileWriters.OutputJsonFileWriter;
 import SearchCriteria.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 
 public class SearchTools {
-    public void search(String inputFile, String outputFile) {
+    public void search(String inputFile, String outputFile) throws IOException, ParseException {
         JSONArray criterias = InputJsonFileReader.readInputSearchFile(inputFile);
 
         ArrayList<SearchCriteria> searchCriteriaArray = new ArrayList<SearchCriteria>();
@@ -46,6 +48,6 @@ public class SearchTools {
                 .put("type", "search")
                 .put("results", jsonArray);
 
-        OutputJsonFileWriter.writeSearchJsonFile(outputFile, resultJson);
+        OutputJsonFileWriter.writeJsonFile(outputFile, resultJson);
     }
 }

@@ -3,7 +3,9 @@ package Tools;
 import InputFileReaders.InputJsonFileReader;
 import OutputFileWriters.OutputJsonFileWriter;
 import org.json.JSONObject;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
@@ -13,7 +15,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class StatTools {
-    public void getStatistic(String inputFile, String outputFile) {
+    public void getStatistic(String inputFile, String outputFile) throws IOException, ParseException {
         JSONObject inputJson = InputJsonFileReader.readInputStatFile(inputFile);
 
         String startDate = inputJson.getString("startDate");
@@ -21,7 +23,7 @@ public class StatTools {
 
         DBConnector connection = new DBConnector();
         try (Connection con = connection.getDBConnecion()) {
-            OutputJsonFileWriter.writeSearchJsonFile(outputFile, getExpensesForPeriod(con, startDate, endDate));
+            OutputJsonFileWriter.writeJsonFile(outputFile, getExpensesForPeriod(con, startDate, endDate));
         } catch (Exception e) {
             e.printStackTrace();
         }

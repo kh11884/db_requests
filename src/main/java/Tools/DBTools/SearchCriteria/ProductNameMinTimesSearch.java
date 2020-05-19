@@ -44,7 +44,7 @@ public class ProductNameMinTimesSearch implements SearchCriteria {
                 "GROUP BY c.lastname, c.firstname\n" +
                 "HAVING COUNT(*) >=+" + minTimesCriteria + ";");
 
-        resultJsonObject.put("criteria", productNameCriteria)
+        resultJsonObject.put("criteria", productNameMinTimesCriteria)
                 .put("results", CustomsJsonBuilder.geCustomsJsonArray(resultSet));
 
         resultSet.close();

@@ -6,22 +6,22 @@ import Tools.StatTools;
 public class Main {
     public static void main(String[] args) {
         try {
+            if (args.length != 3) {
+                throw new IllegalArgumentException("Приложение запускается с неверным количеством аргументов.");
+            }
             if (!getFileExtension(args[1]).equals("json")) {
                 throw new IllegalArgumentException("неверно указано расширение входного файла.");
             }
             if (!getFileExtension(args[2]).equals("json")) {
                 throw new IllegalArgumentException("неверно указано расширение выходного файла.");
             }
-            if (args.length != 3) {
-                throw new IllegalArgumentException("Приложение запускается с неверным количеством аргументов.");
-            }
-
             if (args[0].equals("search")) {
                 new SearchTools().search(args[1], args[2]);
             } else if (args[0].equals("stat")) {
                 new StatTools().getStatistic(args[1], args[2]);
             } else throw new IllegalArgumentException("Неверно указан параметр типа операции.");
         } catch (Exception e) {
+            System.out.println("ОШИБКА:");
             e.printStackTrace();
             new ErrorTools().setError(args[2], e);
         }
@@ -29,6 +29,9 @@ public class Main {
 
     private static String getFileExtension(String fileName) {
         String[] fileNameArray = fileName.split("\\.");
-        return fileNameArray[1];
+        if(fileNameArray.length == 2) {
+            return fileNameArray[1];
+        }
+        throw new IllegalArgumentException("Неверно указаны имена файлов в параметрах.");
     }
 }

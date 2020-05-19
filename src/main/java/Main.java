@@ -21,8 +21,8 @@ public class Main {
                 new StatTools().getStatistic(args[1], args[2]);
             } else throw new IllegalArgumentException("Неверно указан параметр типа операции.");
         } catch (Exception e) {
-            System.out.println("ОШИБКА:");
-            e.printStackTrace();
+            System.out.print("ОШИБКА: ");
+            System.out.println(e.toString());
             new ErrorTools().setError(args[2], e);
         }
     }

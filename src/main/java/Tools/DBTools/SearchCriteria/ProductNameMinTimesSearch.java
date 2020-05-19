@@ -11,35 +11,45 @@ import java.sql.Statement;
 public class ProductNameMinTimesSearch implements SearchCriteria {
     private final JSONObject productNameMinTimesCriteria;
 
-    //TODO: РґРѕР±Р°РІРёС‚СЊ РїСЂРѕРІРµСЂРєСѓ РїСЂР°РІРёР»СЊРЅРѕСЃС‚Рё JSON РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ.
     public ProductNameMinTimesSearch(JSONObject productNameMinTimesCriteria) {
+        Object productName = productNameMinTimesCriteria.get("productName");
+        if (productName.getClass() != String.class) {
+            throw new IllegalArgumentException("Неверно указано значение в критерии productName.");
+        }
+
+        Object minTimes = productNameMinTimesCriteria.get("minTimes");
+        if (minTimes.getClass() != Long.class) {
+            throw new IllegalArgumentException("Неверно указано значение в критерии minTimes.");
+        }
+        if (productNameMinTimesCriteria.getInt("minTimes") < 1) {
+            throw new IllegalArgumentException("Значение в критерии minTimes не может быть меньше 1.");
+        }
+
         this.productNameMinTimesCriteria = productNameMinTimesCriteria;
     }
 
     @Override
-    public JSONObject getJson(Connection connection) {
+    public JSONObject getJson(Connection connection) throws SQLException {
         JSONObject resultJsonObject = new JSONObject();
-        try {
-            String productNameCriteria = productNameMinTimesCriteria.getString("productName");
-            int minTimesCriteria = productNameMinTimesCriteria.getInt("minTimes");
 
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT c.lastname, c.firstname, p.productname, COUNT(*)\n" +
-                    "FROM purchases pu\n" +
-                    "         LEFT JOIN customers c on pu.customer_id = c.id\n" +
-                    "         LEFT JOIN products p on pu.product_id = p.id\n" +
-                    "WHERE p.productname = '" + productNameCriteria + "'\n" +
-                    "GROUP BY c.lastname, c.firstname, p.productname\n" +
-                    "HAVING COUNT(*) >=+" + minTimesCriteria + ";");
+        String productNameCriteria = productNameMinTimesCriteria.getString("productName");
+        int minTimesCriteria = productNameMinTimesCriteria.getInt("minTimes");
 
-            resultJsonObject.put("criteria", productNameMinTimesCriteria);
-            resultJsonObject.put("results", CustomsJsonBuilder.geCustomsJsonArray(resultSet));
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery("SELECT c.lastname, c.firstname, p.productname, COUNT(*)\n" +
+                "FROM purchases pu\n" +
+                "         LEFT JOIN customers c on pu.customer_id = c.id\n" +
+                "         LEFT JOIN products p on pu.product_id = p.id\n" +
+                "WHERE p.productname = '" + productNameCriteria + "'\n" +
+                "GROUP BY c.lastname, c.firstname, p.productname\n" +
+                "HAVING COUNT(*) >=+" + minTimesCriteria + ";");
 
-            resultSet.close();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        resultJsonObject.put("criteria", productNameMinTimesCriteria);
+        resultJsonObject.put("results", CustomsJsonBuilder.geCustomsJsonArray(resultSet));
+
+        resultSet.close();
+        stmt.close();
+
         return resultJsonObject;
     }
 }

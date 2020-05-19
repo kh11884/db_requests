@@ -1,6 +1,7 @@
 package Tools.JsonTools;
 
 import Tools.DBTools.DBStatQueries;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
@@ -14,7 +15,8 @@ public class StatJsonBuilder {
         JSONObject resultJsonObject = new JSONObject();
         BigDecimal total = new BigDecimal(0);
         resultJsonObject.put("type", "stat")
-                .put("TotalDays", DBStatQueries.getDaysQuantity(connection, startDate, endDate));
+                .put("TotalDays", DBStatQueries.getDaysQuantity(connection, startDate, endDate))
+                .put("customers", new JSONArray());
 
         ArrayList<JSONObject> customersList = DBStatQueries.getCustomersForPeriod(connection, startDate, endDate);
 
@@ -25,8 +27,13 @@ public class StatJsonBuilder {
         }
         BigDecimal customersCount = new BigDecimal(customersList.size());
 
-        resultJsonObject.put("TotalExpenses", total);
-        resultJsonObject.put("AvgExpenses", total.divide(customersCount, 2, RoundingMode.HALF_UP));
+        if (customersCount.signum() == 0) {
+            resultJsonObject.put("AvgExpenses", 0);
+            resultJsonObject.put("TotalExpenses", 0);
+        } else {
+            resultJsonObject.put("AvgExpenses", total.divide(customersCount, 2, RoundingMode.HALF_UP));
+            resultJsonObject.put("TotalExpenses", total);
+        }
         return resultJsonObject;
     }
 }

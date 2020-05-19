@@ -9,6 +9,7 @@ import java.sql.SQLException;
 public class CustomsJsonBuilder {
     public static JSONArray geCustomsJsonArray(ResultSet resultSet) throws SQLException {
         JSONArray resultJsonArray = new JSONArray();
+
         while (resultSet.next()) {
             resultJsonArray.put(new JSONObject()
                     .put("lastName", resultSet.getString(1))

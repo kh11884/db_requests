@@ -14,7 +14,11 @@ public class DBStatQueries {
         int result = 0;
 
         Statement stmt = connection.createStatement();
-        ResultSet resultSet = stmt.executeQuery("SELECT DATE('" + endDate + "') - DATE('" + startDate + "') + 1");
+        ResultSet resultSet = stmt.executeQuery("SELECT count(*)" +
+                "FROM   generate_series(timestamp '" + startDate + "'\n" +
+                "                     , timestamp '" + endDate + "'\n" +
+                "                     , interval  '1 day') days\n" +
+                "WHERE  extract('ISODOW' FROM days) < 6;");
         while (resultSet.next()) {
             result = resultSet.getInt(1);
         }

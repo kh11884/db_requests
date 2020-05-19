@@ -35,16 +35,19 @@ public class ProductNameMinTimesSearch implements SearchCriteria {
         String productNameCriteria = productNameMinTimesCriteria.getString("productName");
         int minTimesCriteria = productNameMinTimesCriteria.getInt("minTimes");
 
-        Statement stmt = connection.createStatement();
-        ResultSet resultSet = stmt.executeQuery("SELECT c.lastname, c.firstname, p.productname, COUNT(*)\n" +
+        Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+        ResultSet resultSet = stmt.executeQuery("SELECT c.lastname, c.firstname, p.productname\n" +
                 "FROM purchases pu\n" +
                 "         LEFT JOIN customers c on pu.customer_id = c.id\n" +
                 "         LEFT JOIN products p on pu.product_id = p.id\n" +
-                "WHERE p.productname = '" + productNameCriteria + "'\n" +
+                "WHERE LOWER(p.productname) = '" + productNameCriteria.toLowerCase() + "'\n" +
                 "GROUP BY c.lastname, c.firstname, p.productname\n" +
                 "HAVING COUNT(*) >=+" + minTimesCriteria + ";");
 
-        resultJsonObject.put("criteria", productNameMinTimesCriteria);
+        if(resultSet.next()) {
+            resultJsonObject.put("criteria", resultSet.getString(3));
+        }
+        resultSet.beforeFirst();
         resultJsonObject.put("results", CustomsJsonBuilder.geCustomsJsonArray(resultSet));
 
         resultSet.close();

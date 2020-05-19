@@ -1,18 +1,18 @@
 {
   "criterias": [
     {
-      "lastName": "смирнов"
+      "lastName": "—мирнов"
     },
     {
-      "productName": "р»с",
+      "productName": " екес",
       "minTimes": 3
     },
     {
-      "minExpenses": 1150,
+      "minExpenses": 1170,
       "maxExpenses": 1200
     },
     {
-      "badCustomers": 5
+      "badCustomers": 2
     }
   ]
 }

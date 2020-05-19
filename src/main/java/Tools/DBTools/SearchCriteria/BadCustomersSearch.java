@@ -9,11 +9,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class BadCustomersSearch implements SearchCriteria {
-    private final JSONObject badCustomersCriteria;
+    private final JSONObject badCustomersCriteria1;
 
-    //TODO: РґРѕР±Р°РІРёС‚СЊ РїСЂРѕРІРµСЂРєСѓ РїСЂР°РІРёР»СЊРЅРѕСЃС‚Рё JSON РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ.
     public BadCustomersSearch(JSONObject badCustomersCriteria) {
-        this.badCustomersCriteria = badCustomersCriteria;
+        Object value = badCustomersCriteria.get("badCustomers");
+
+        if (value.getClass() != Long.class) {
+            throw new IllegalArgumentException("Неверно указано значение в критерии badCustomers.");
+        }
+        if (badCustomersCriteria.getInt("badCustomers") < 1) {
+            throw new IllegalArgumentException("Значение в критерии badCustomers не может быть меньше 1.");
+        }
+        this.badCustomersCriteria1 = badCustomersCriteria;
     }
 
     @Override
@@ -21,7 +28,7 @@ public class BadCustomersSearch implements SearchCriteria {
         JSONObject resultJsonObject = new JSONObject();
         try {
             Statement stmt = connection.createStatement();
-            int badCustomersCount = badCustomersCriteria.getInt("badCustomers");
+            int badCustomersCount = badCustomersCriteria1.getInt("badCustomers");
             ResultSet resultSet = stmt.executeQuery("SELECT c.lastname, c.firstname, SUM(p.price)\n" +
                     "FROM purchases pu\n" +
                     "         LEFT JOIN customers c on pu.customer_id = c.id\n" +
@@ -30,7 +37,7 @@ public class BadCustomersSearch implements SearchCriteria {
                     "ORDER BY SUM(p.price)\n" +
                     "LIMIT " + badCustomersCount);
 
-            resultJsonObject.put("criteria", badCustomersCriteria);
+            resultJsonObject.put("criteria", badCustomersCriteria1);
             resultJsonObject.put("results", SearchJsonBuilder.getResultsJsonArray(resultSet));
 
             resultSet.close();
@@ -40,4 +47,5 @@ public class BadCustomersSearch implements SearchCriteria {
         }
         return resultJsonObject;
     }
+
 }

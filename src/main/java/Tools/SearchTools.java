@@ -15,6 +15,10 @@ import java.util.ArrayList;
 public class SearchTools {
     public void search(String inputFile, String outputFile) throws IOException, ParseException {
         JSONObject inputJson = InputJsonFileReader.readInputStatFile(inputFile);
+
+        if(!inputJson.has("criterias")){
+            throw new IllegalArgumentException("В входном файле отсутсвуют критерии для поиска.");
+        }
         JSONArray criterias = inputJson.getJSONArray("criterias");
 
         ArrayList<SearchCriteria> searchCriteriaArray = new ArrayList<SearchCriteria>();
@@ -33,6 +37,8 @@ public class SearchTools {
                 case "[badCustomers]":
                     searchCriteriaArray.add(new BadCustomersSearch(element));
                     break;
+                default:
+                    throw new IllegalArgumentException("Передан неизвестный критерий для поиска");
             }
         }
 

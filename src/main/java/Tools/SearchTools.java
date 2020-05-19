@@ -1,7 +1,7 @@
 package Tools;
 
-import InputFileReaders.InputJsonFileReader;
-import OutputFileWriters.OutputJsonFileWriter;
+import Tools.FileTools.InputJsonFileReader;
+import Tools.FileTools.OutputJsonFileWriter;
 import Tools.DBTools.SearchCriteria.*;
 import Tools.DBTools.DBConnector;
 import org.json.JSONArray;

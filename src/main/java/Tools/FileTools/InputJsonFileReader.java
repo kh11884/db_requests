@@ -1,4 +1,4 @@
-package InputFileReaders;
+package Tools.FileTools;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

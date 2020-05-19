@@ -1,6 +1,6 @@
 package Tools.DBTools.SearchCriteria;
 
-import JsonBuilders.SearchJsonBuilder;
+import Tools.JsonTools.SearchJsonBuilder;
 import org.json.JSONObject;
 
 import java.sql.Connection;

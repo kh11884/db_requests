@@ -1,8 +1,8 @@
 package Tools;
 
-import InputFileReaders.InputJsonFileReader;
-import JsonBuilders.StatJsonBuilder;
-import OutputFileWriters.OutputJsonFileWriter;
+import Tools.FileTools.InputJsonFileReader;
+import Tools.JsonTools.StatJsonBuilder;
+import Tools.FileTools.OutputJsonFileWriter;
 import Tools.DBTools.DBConnector;
 import org.json.JSONObject;
 import org.json.simple.parser.ParseException;

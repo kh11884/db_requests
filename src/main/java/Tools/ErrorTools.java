@@ -1,7 +1,7 @@
 package Tools;
 
-import JsonBuilders.ErrorJsonBuilder;
-import OutputFileWriters.OutputJsonFileWriter;
+import Tools.JsonTools.ErrorJsonBuilder;
+import Tools.FileTools.OutputJsonFileWriter;
 import org.json.JSONObject;
 
 public class ErrorTools {

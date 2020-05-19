@@ -1,6 +1,6 @@
 package Tools.DBTools.SearchCriteria;
 
-import Tools.JsonTools.SearchJsonBuilder;
+import Tools.JsonTools.SearchCriteriaTools.CustomsJsonBuilder;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -11,28 +11,28 @@ import java.sql.Statement;
 public class LastNameSearch implements SearchCriteria {
     private final JSONObject lastNameCriteria;
 
-    //TODO: РґРѕР±Р°РІРёС‚СЊ РїСЂРѕРІРµСЂРєСѓ РїСЂР°РІРёР»СЊРЅРѕСЃС‚Рё JSON РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ.
     public LastNameSearch(JSONObject lastNameCriteria) {
+        Object value = lastNameCriteria.get("lastName");
+        if (value.getClass() != String.class) {
+            throw new IllegalArgumentException("Неверно указано значение в критерии lastName.");
+        }
         this.lastNameCriteria = lastNameCriteria;
     }
 
     @Override
-    public JSONObject getJson(Connection connection) {
+    public JSONObject getJson(Connection connection) throws SQLException {
         JSONObject resultJsonObject = new JSONObject();
-        try {
-            Statement stmt = connection.createStatement();
-            String lastNameCriteriaString = lastNameCriteria.getString("lastName");
-            ResultSet resultSet = stmt.executeQuery("SELECT lastname, firstname FROM customers\n" +
-                    "WHERE lastname = '" + lastNameCriteriaString + "'");
+        Statement stmt = connection.createStatement();
+        String lastNameCriteriaString = lastNameCriteria.getString("lastName");
+        ResultSet resultSet = stmt.executeQuery("SELECT lastname, firstname FROM customers\n" +
+                "WHERE lastname = '" + lastNameCriteriaString + "'");
 
-            resultJsonObject.put("criteria", lastNameCriteria);
-            resultJsonObject.put("results", SearchJsonBuilder.getResultsJsonArray(resultSet));
+        resultJsonObject.put("criteria", lastNameCriteria);
+        resultJsonObject.put("results", CustomsJsonBuilder.geCustomsJsonArray(resultSet));
 
-            resultSet.close();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        resultSet.close();
+        stmt.close();
+
         return resultJsonObject;
     }
 }

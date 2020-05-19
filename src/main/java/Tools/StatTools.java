@@ -9,20 +9,19 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 
 public class StatTools {
-    public void getStatistic(String inputFile, String outputFile) throws IOException, ParseException {
+    public void getStatistic(String inputFile, String outputFile) throws IOException, ParseException, SQLException {
         JSONObject inputJson = InputJsonFileReader.readInputStatFile(inputFile);
 
         String startDate = inputJson.getString("startDate");
         String endDate = inputJson.getString("endDate");
 
         DBConnector connection = new DBConnector();
-        try (Connection con = connection.getDBConnecion()) {
-            OutputJsonFileWriter.writeJsonFile(outputFile, StatJsonBuilder.getStatJson(con, startDate, endDate));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Connection con = connection.getDBConnecion();
+        OutputJsonFileWriter.writeJsonFile(outputFile, StatJsonBuilder.getStatJson(con, startDate, endDate));
+        con.close();
     }
 }

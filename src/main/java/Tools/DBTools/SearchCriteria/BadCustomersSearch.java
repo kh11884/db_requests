@@ -1,6 +1,6 @@
 package Tools.DBTools.SearchCriteria;
 
-import Tools.JsonTools.SearchJsonBuilder;
+import Tools.JsonTools.SearchCriteriaTools.CustomsJsonBuilder;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class BadCustomersSearch implements SearchCriteria {
-    private final JSONObject badCustomersCriteria1;
+    private final JSONObject badCustomersCriteria;
 
     public BadCustomersSearch(JSONObject badCustomersCriteria) {
         Object value = badCustomersCriteria.get("badCustomers");
@@ -20,32 +20,29 @@ public class BadCustomersSearch implements SearchCriteria {
         if (badCustomersCriteria.getInt("badCustomers") < 1) {
             throw new IllegalArgumentException("Значение в критерии badCustomers не может быть меньше 1.");
         }
-        this.badCustomersCriteria1 = badCustomersCriteria;
+        this.badCustomersCriteria = badCustomersCriteria;
     }
 
     @Override
-    public JSONObject getJson(Connection connection) {
+    public JSONObject getJson(Connection connection) throws SQLException {
         JSONObject resultJsonObject = new JSONObject();
-        try {
-            Statement stmt = connection.createStatement();
-            int badCustomersCount = badCustomersCriteria1.getInt("badCustomers");
-            ResultSet resultSet = stmt.executeQuery("SELECT c.lastname, c.firstname, SUM(p.price)\n" +
-                    "FROM purchases pu\n" +
-                    "         LEFT JOIN customers c on pu.customer_id = c.id\n" +
-                    "         LEFT JOIN products p on pu.product_id = p.id\n" +
-                    "GROUP BY c.lastname, c.firstname\n" +
-                    "ORDER BY SUM(p.price)\n" +
-                    "LIMIT " + badCustomersCount);
 
-            resultJsonObject.put("criteria", badCustomersCriteria1);
-            resultJsonObject.put("results", SearchJsonBuilder.getResultsJsonArray(resultSet));
+        Statement stmt = connection.createStatement();
+        int badCustomersCount = badCustomersCriteria.getInt("badCustomers");
+        ResultSet resultSet = stmt.executeQuery("SELECT c.lastname, c.firstname, SUM(p.price)\n" +
+                "FROM purchases pu\n" +
+                "         LEFT JOIN customers c on pu.customer_id = c.id\n" +
+                "         LEFT JOIN products p on pu.product_id = p.id\n" +
+                "GROUP BY c.lastname, c.firstname\n" +
+                "ORDER BY SUM(p.price)\n" +
+                "LIMIT " + badCustomersCount);
 
-            resultSet.close();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        resultJsonObject.put("criteria", badCustomersCriteria);
+        resultJsonObject.put("results", CustomsJsonBuilder.geCustomsJsonArray(resultSet));
+
+        resultSet.close();
+        stmt.close();
+
         return resultJsonObject;
     }
-
 }

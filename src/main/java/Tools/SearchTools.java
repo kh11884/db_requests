@@ -4,19 +4,21 @@ import Tools.FileTools.InputJsonFileReader;
 import Tools.FileTools.OutputJsonFileWriter;
 import Tools.DBTools.SearchCriteria.*;
 import Tools.DBTools.DBConnector;
+import Tools.JsonTools.SearchJsonBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SearchTools {
-    public void search(String inputFile, String outputFile) throws IOException, ParseException {
+    public void search(String inputFile, String outputFile) throws IOException, ParseException, SQLException {
         JSONObject inputJson = InputJsonFileReader.readInputStatFile(inputFile);
 
-        if(!inputJson.has("criterias")){
+        if (!inputJson.has("criterias")) {
             throw new IllegalArgumentException("В входном файле отсутсвуют критерии для поиска.");
         }
         JSONArray criterias = inputJson.getJSONArray("criterias");
@@ -41,20 +43,10 @@ public class SearchTools {
                     throw new IllegalArgumentException("Передан неизвестный критерий для поиска");
             }
         }
-
-        JSONArray jsonArray = new JSONArray();
         DBConnector connection = new DBConnector();
-        try (Connection con = connection.getDBConnecion()) {
-            for (SearchCriteria searchCriteria : searchCriteriaArray) {
-                jsonArray.put(searchCriteria.getJson(con));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        JSONObject resultJson = new JSONObject()
-                .put("type", "search")
-                .put("results", jsonArray);
+        Connection con = connection.getDBConnecion();
+        JSONObject resultJson = SearchJsonBuilder.getSearchJson(con, searchCriteriaArray);
+        con.close();
 
         OutputJsonFileWriter.writeJsonFile(outputFile, resultJson);
     }

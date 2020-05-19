@@ -1,20 +1,21 @@
 package Tools.JsonTools;
 
-import com.sun.org.apache.bcel.internal.generic.JsrInstruction;
+import Tools.DBTools.SearchCriteria.SearchCriteria;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class SearchJsonBuilder {
-    public static JSONArray getResultsJsonArray (ResultSet resultSet) throws SQLException {
-        JSONArray resultJsonArray = new JSONArray();
-        while (resultSet.next()) {
-            resultJsonArray.put(new JSONObject()
-                    .put("lastName", resultSet.getString(1))
-                    .put("firstName", resultSet.getString(2)));
+    public static JSONObject getSearchJson (Connection connection, ArrayList<SearchCriteria> searchCriteriaArray) throws SQLException {
+        JSONArray jsonArray = new JSONArray();
+        for (SearchCriteria searchCriteria : searchCriteriaArray) {
+            jsonArray.put(searchCriteria.getJson(connection));
         }
-        return resultJsonArray;
+
+        return new JSONObject().put("type", "search")
+                .put("results", jsonArray);
     }
 }

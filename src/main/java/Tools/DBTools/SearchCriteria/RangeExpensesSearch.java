@@ -1,6 +1,6 @@
 package Tools.DBTools.SearchCriteria;
 
-import Tools.JsonTools.SearchJsonBuilder;
+import Tools.JsonTools.SearchCriteriaTools.CustomsJsonBuilder;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -31,7 +31,7 @@ public class RangeExpensesSearch implements SearchCriteria {
                     "HAVING SUM(p.price) BETWEEN " + minExpenses + " AND " + maxExpenses + ";");
 
             resultJsonObject.put("criteria", rangeExpensesCriteria);
-            resultJsonObject.put("results", SearchJsonBuilder.getResultsJsonArray(resultSet));
+            resultJsonObject.put("results", CustomsJsonBuilder.geCustomsJsonArray(resultSet));
 
             resultSet.close();
             stmt.close();

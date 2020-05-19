@@ -1,4 +1,4 @@
-package Tools.JsonTools;
+package Tools.JsonTools.SearchCriteriaTools;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

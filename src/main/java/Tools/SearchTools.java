@@ -14,7 +14,8 @@ import java.util.ArrayList;
 
 public class SearchTools {
     public void search(String inputFile, String outputFile) throws IOException, ParseException {
-        JSONArray criterias = InputJsonFileReader.readInputSearchFile(inputFile);
+        JSONObject inputJson = InputJsonFileReader.readInputStatFile(inputFile);
+        JSONArray criterias = inputJson.getJSONArray("criterias");
 
         ArrayList<SearchCriteria> searchCriteriaArray = new ArrayList<SearchCriteria>();
         for (Object item : criterias) {

@@ -10,21 +10,19 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class DBStatQueries {
-    public static int getDaysQuantity(Connection connection, String startDate, String endDate) {
+    public static int getDaysQuantity(Connection connection, String startDate, String endDate) throws SQLException {
         int result = 0;
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT DATE('" + endDate + "') - DATE('" + startDate + "') + 1");
-            while (resultSet.next()) {
-                result = resultSet.getInt(1);
-            }
-            resultSet.close();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery("SELECT DATE('" + endDate + "') - DATE('" + startDate + "') + 1");
+        while (resultSet.next()) {
+            result = resultSet.getInt(1);
         }
-        if(result < 1){
-            throw  new IllegalArgumentException("ƒата начала периода больше даты окончани€ периода");
+        resultSet.close();
+        stmt.close();
+
+        if (result < 1) {
+            throw new IllegalArgumentException("ƒата начала периода больше даты окончани€ периода.");
         }
         return result;
     }

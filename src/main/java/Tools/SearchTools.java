@@ -23,7 +23,7 @@ public class SearchTools {
         }
         JSONArray criterias = inputJson.getJSONArray("criterias");
 
-        ArrayList<SearchCriteria> searchCriteriaArray = new ArrayList<SearchCriteria>();
+        ArrayList<SearchCriteria> searchCriteriaArray = new ArrayList<>();
         for (Object item : criterias) {
             JSONObject element = (JSONObject) item;
             switch (element.keySet().toString()) {
@@ -40,7 +40,7 @@ public class SearchTools {
                     searchCriteriaArray.add(new BadCustomersSearch(element));
                     break;
                 default:
-                    throw new IllegalArgumentException("Передан неизвестный критерий для поиска");
+                    throw new IllegalArgumentException("Передан неизвестный критерий для поиска.");
             }
         }
         DBConnector connection = new DBConnector();

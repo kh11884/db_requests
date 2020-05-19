@@ -6,10 +6,11 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class StatJsonBuilder {
-    public static JSONObject getStatJson(Connection connection, String startDate, String endDate) {
+    public static JSONObject getStatJson(Connection connection, String startDate, String endDate) throws SQLException {
         JSONObject resultJsonObject = new JSONObject();
         BigDecimal total = new BigDecimal(0);
         resultJsonObject.put("type", "stat")

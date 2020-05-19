@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SearchJsonBuilder {
-    public static JSONObject getSearchJson (Connection connection, ArrayList<SearchCriteria> searchCriteriaArray) throws SQLException {
+    public static JSONObject getSearchJson(Connection connection, ArrayList<SearchCriteria> searchCriteriaArray) throws SQLException {
         JSONArray jsonArray = new JSONArray();
         for (SearchCriteria searchCriteria : searchCriteriaArray) {
             jsonArray.put(searchCriteria.getJson(connection));

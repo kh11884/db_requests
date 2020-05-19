@@ -1,4 +1,4 @@
-package SearchCriteria;
+package Tools.DBTools.SearchCriteria;
 
 import JsonBuilders.SearchJsonBuilder;
 import org.json.JSONObject;

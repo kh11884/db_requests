@@ -2,7 +2,8 @@ package Tools;
 
 import InputFileReaders.InputJsonFileReader;
 import OutputFileWriters.OutputJsonFileWriter;
-import SearchCriteria.*;
+import Tools.DBTools.SearchCriteria.*;
+import Tools.DBTools.DBConnector;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.ParseException;
